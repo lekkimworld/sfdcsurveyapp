@@ -78,8 +78,8 @@ router.get('/', function(req, res, next) {
 					"salesforce": obj
 				};
 
-				// send redirect back to index
-				res.redirect(302, "/");
+				// send redirect back to application
+				res.redirect(302, "/app");
 			});
 		});
 

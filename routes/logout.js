@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET products listing. */
+/* GET logout */
 router.get('/', function(req, res, next) {
-	res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({a: 1, b: 2, c: 3}));
-	
+	// remove any user object from session
+	delete req.session.user;
+
+	// send to root
+	res.redirect(302, "/");
 });
 
 module.exports = router;
