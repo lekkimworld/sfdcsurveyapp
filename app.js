@@ -8,9 +8,11 @@ var session = require('express-session');
 
 var routeIndex = require('./routes/index');
 var routeApp = require('./routes/app');
+var routeProducts = require('./routes/products');
 var routeLogout = require('./routes/logout');
 var routeOAuth20_cb = require('./routes/oauth20_cb');
 var routeApiV1User = require('./routes/api/v1/user');
+var routeApiV1Prodsearch = require('./routes/api/v1/productsearch');
 
 var app = express();
 
@@ -25,9 +27,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routeIndex);
 app.use('/app', routeApp);
+app.use('/products', routeProducts);
 app.use('/logout', routeLogout);
 app.use('/oauth20_cb', routeOAuth20_cb);
 app.use('/api/v1/user', routeApiV1User);
+app.use('/api/v1/productsearch', routeApiV1Prodsearch);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

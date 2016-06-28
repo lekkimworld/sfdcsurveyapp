@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 		// no user object
 		res.json({
 			"Status": "ERROR", 
-			"Error": "NoUser"
+			"ErrorCode": "NoUser"
 		})
 	}
 });
