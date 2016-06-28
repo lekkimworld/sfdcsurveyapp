@@ -19,6 +19,10 @@
 
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <!-- date picker -->
+    <script src="/javascripts/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/bootstrap-datepicker3.standalone.css">
 	</head>
 <body>
 
@@ -46,36 +50,37 @@
 
     <div class="container">
       <p>
-        <button class="btn btn-danger" ng-click="back()">Cancel</button>
-        <button class="btn btn-success pull-right" ng-click="next()" ng-disabled="!selection">Next</button>
+        <button class="btn btn-danger" ng-click="back()">Back</button>
+        <button class="btn btn-success pull-right" ng-click="next()" ng-disabled="selection.length == 0">Next</button>
       </p>
     </div>
 
     <div class="container">
-
-      <div class="input-group">
-        <input type="text" class="form-control" id="query" ng-model="query" placeholder="Perform a search using the form above and click Search to search Salesforce...">
+      Selected product: {{selectedProduct.ProductCode}} - {{selectedProduct.Name}}
+      <div class="input-daterange input-group" id="datepicker">
+        <input type="text" class="input-md form-control" name="start" />
+        <span class="input-group-addon">to</span>
+        <input type="text" class="input-md form-control" name="end" />
         <span class="input-group-btn">
           <button class="btn btn-default" type="button" ng-click="search()">Search</button>
-          <label class="btn btn-default">
-            <input type="radio" name="searchfor" ng-model="searchfor" value="code" checked> Product Code
-          </label>
-          <label class="btn btn-default">
-            <input type="radio" name="searchfor" ng-model="searchfor" value="name"> Product Name
-          </label>
         </span>
-      </div>
+    </div>
 
       <table class="table" ng-hide="!results">
         <thead>
-          <th width="20%">Product Code</th>
-          <th>Product Name</th>
-          <th width="20%">Action</th>
+          <th><input type="checkbox" value="all" ng-click="selectAll($event)" 
+            ng-checked="allChecked" /></th>
+          <th width="20%">Name</th>
+          <th>Email</th>
+          <th width="20%">Account</th>
         </thead>
-        <tr ng-repeat="result in results | orderBy: 'ProductCode'">
-          <td width="20%">{{result.ProductCode}}</td>
-          <td>{{result.Name}}</td>
-          <td width="20%"><button class="btn btn-default" id="{{result.ProductCode}}" ng-click="select($event)">Select</button></td>
+        <tr ng-repeat="result in results | orderBy: ['Contact.FirstName','Contact.LastName']">
+          <td><input type="checkbox" value="{{result.ContactId}}" 
+            ng-click="toggleSelection(result.ContactId)"
+            ng-checked="selection.indexOf(result.ContactId) > -1" /></td>
+          <td width="20%">{{result.Contact.FirstName}} {{result.Contact.LastName}}</td>
+          <td>{{result.Contact.Email}}</td>
+          <td>{{result.Contact.Account.Name}}</td>
         </tr>
       </table>
 
@@ -94,44 +99,74 @@ var app = angular.module('sfdcsurveyapp', []);
 
 // define controller
 app.controller('myCtrl', function($scope, $http, $window) {
+  $scope.selection = [];
+
   $http.get("/api/v1/user").then(function(response) {
     $scope.username = response.data.displayName;
+    $scope.selectedProduct = response.data.selectedProduct;
   });
-  
-  $scope.searchfor = "code";
-  $scope.query = "";
+
+  $scope.selectAll = function(event) {
+    $scope.selection = [];
+    if (event.target.checked) {
+      $scope.results.forEach(function(p) {
+        $scope.selection.push(p.ContactId);
+      });
+    }
+    $scope.allChecked = event.target.checked;
+  }
+
+  $scope.toggleSelection = function(contactId) {
+    var idx = $scope.selection.indexOf(contactId);
+    if (idx < 0) {
+      $scope.selection.push(contactId);
+    } else {
+      $scope.selection.splice(idx, 1);
+      $scope.allChecked = false;
+    }
+  }
+
   $scope.search = function() {
-    $http.post("/api/v1/productsearch", {
-      "searchFor": $scope.searchfor,
-      "query": $scope.query
+    if (!$scope.startDate || !$scope.endDate) return;
+    
+    // ask api to search for contacts
+    $http.post("/api/v1/contactsearch", {
+      "fromDate": $.sfdcFormatDate($scope.startDate),
+      "toDate": $.sfdcFormatDate($scope.endDate)
     }).then(function(response) {
       $scope.results = response.data;
     });
-  };
-  $scope.select = function(event) {
-    var id = event.target.id;
-    for (var idx in $scope.results) {
-      var prod = $scope.results[idx];
-      if (prod.ProductCode == id) {
-        $scope.selection = prod;
-        $(event.target.parentNode.parentNode).addClass("active").siblings().removeClass("active");
-      }
-    }
   }
-  $scope.back = function() {
-    $window.location.href = "/app";
-  };
-  $scope.next = function() {
-    // sanity
-    if (!$scope.selection) return;
 
-    // user is clicking next - post product code to API
-    $http.post("/api/v1/productselect", $scope.selection).then(function(response) {
-      $window.location.href = "/contacts";
-    });
-  };
-  
+  $scope.back = function() {
+    $window.location.href = "/products";
+  }
+
+  $('.input-daterange').datepicker({
+    format: 'dd-mm-yyyy',
+    autoclose: true
+  }).on("changeDate", function(event) {
+    if (event.target.name == "start") $scope.startDate = event.date;
+    if (event.target.name == "end") $scope.endDate = event.date;
+  });
 });
+
+$.sfdcFormatDate = function(dateObject) {
+    var d = new Date(dateObject);
+    var day = d.getDate();
+    var month = d.getMonth() + 1;
+    var year = d.getFullYear();
+    if (day < 10) {
+        day = "0" + day;
+    }
+    if (month < 10) {
+        month = "0" + month;
+    }
+    var date = year+"-"+month+"-"+day;
+
+    return date;
+};
+
 </script>
 
 </body>

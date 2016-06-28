@@ -79,6 +79,7 @@ router.get('/', function(req, res, next) {
 				};
 
 				// send redirect back to application
+				console.log("Authorized username <" + obj.username + "> with access_token <" + access_token + ">");
 				res.redirect(302, "/app");
 			});
 		});
