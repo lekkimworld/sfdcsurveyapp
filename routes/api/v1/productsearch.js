@@ -20,9 +20,9 @@ router.post('/', function(req, res, next) {
 
 	// product code take precedence
 	if (searchfor == "code") {
-		var query = "select id,productcode,name from product2 where productcode='" + query + "'";
+		var query = "select id,productcode,name from product2 where isactive=true and productcode='" + query + "'";
 	} else if (searchfor == "name") {
-		var query = "select id,productcode,name from product2 where name like '" + query + "%'";
+		var query = "select id,productcode,name from product2 isactive=true and where name like '" + query + "%'";
 	} else {
 		res.json({
 			"Status": "ERROR",

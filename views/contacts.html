@@ -64,23 +64,28 @@
         <span class="input-group-btn">
           <button class="btn btn-default" type="button" ng-click="search()">Search</button>
         </span>
-    </div>
+      </div>
+      <div class="checkbox">
+        <label><input type="checkbox" value="1" ng-model="uniqueOnly" ng-click="toggleUniqueContacts($event)">Show unique contacts only</label>
+      </div>
 
-      <table class="table" ng-hide="!results">
+      <table class="table" ng-hide="!filteredResults">
         <thead>
           <th><input type="checkbox" value="all" ng-click="selectAll($event)" 
             ng-checked="allChecked" /></th>
           <th width="20%">Name</th>
           <th>Email</th>
           <th width="20%">Account</th>
+          <th width="20%">Opportunity</th>
         </thead>
-        <tr ng-repeat="result in results | orderBy: ['Contact.FirstName','Contact.LastName']">
+        <tr ng-repeat="result in filteredResults | orderBy: ['Contact.FirstName','Contact.LastName']">
           <td><input type="checkbox" value="{{result.ContactId}}" 
             ng-click="toggleSelection(result.ContactId)"
             ng-checked="selection.indexOf(result.ContactId) > -1" /></td>
           <td width="20%">{{result.Contact.FirstName}} {{result.Contact.LastName}}</td>
           <td>{{result.Contact.Email}}</td>
           <td>{{result.Contact.Account.Name}}</td>
+          <td>{{result.Opportunity.Name}}</td>
         </tr>
       </table>
 
@@ -100,6 +105,8 @@ var app = angular.module('sfdcsurveyapp', []);
 // define controller
 app.controller('myCtrl', function($scope, $http, $window) {
   $scope.selection = [];
+
+  $scope.uniqueOnly = false;
 
   $http.get("/api/v1/user").then(function(response) {
     $scope.username = response.data.displayName;
@@ -126,6 +133,23 @@ app.controller('myCtrl', function($scope, $http, $window) {
     }
   }
 
+  $scope.filterResults = function() {
+    if (!$scope.uniqueOnly) {
+      $scope.filteredResults = $scope.results;
+    } else {
+      var filteredResults = [];
+      var uniqueIds = [];
+      for (var idx in $scope.results) {
+        var r = $scope.results[idx];
+        if (uniqueIds.indexOf(r.ContactId) < 0) {
+          filteredResults.push(r);
+          uniqueIds.push(r.ContactId);
+        }
+      }
+      $scope.filteredResults = filteredResults;
+    }
+  }
+
   $scope.search = function() {
     if (!$scope.startDate || !$scope.endDate) return;
     
@@ -135,8 +159,16 @@ app.controller('myCtrl', function($scope, $http, $window) {
       "toDate": $.sfdcFormatDate($scope.endDate)
     }).then(function(response) {
       $scope.results = response.data;
+      $scope.filterResults();
     });
   }
+
+  $scope.toggleUniqueContacts = function(event) {
+    $scope.uniqueOnly = event.target.checked;
+    $scope.filterResults();
+  }
+
+  
 
   $scope.back = function() {
     $window.location.href = "/products";

@@ -29,7 +29,8 @@ router.post('/', function(req, res, next) {
 	var productCode = req.session.selectedProduct.ProductCode;
 
 	// product code take precedence
-	var query = "select contactid, opportunitycontactrole.contact.firstname, " +
+	var query = "select contactid, opportunityid, opportunitycontactrole.opportunity.name, " + 
+		"opportunitycontactrole.contact.firstname, " +
 		"opportunitycontactrole.contact.lastname, opportunitycontactrole.contact.email, " +
 		"opportunitycontactrole.contact.account.id,opportunitycontactrole.contact.account.name " +
 		"from opportunitycontactrole where opportunitycontactrole.contact.email != null and " + 
