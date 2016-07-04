@@ -22,7 +22,7 @@ router.post('/', function(req, res, next) {
 	if (searchfor == "code") {
 		var query = "select id,productcode,name from product2 where isactive=true and productcode='" + query + "'";
 	} else if (searchfor == "name") {
-		var query = "select id,productcode,name from product2 where isactive=true and where name like '" + query + "%'";
+		var query = "select id,productcode,name from product2 where isactive=true and name like '" + query + "%'";
 	} else {
 		res.json({
 			"Status": "ERROR",
