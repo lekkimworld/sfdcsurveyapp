@@ -22,7 +22,7 @@ function getAccessToken() {
 	var clientId = process.env.OAUTH_CLIENT_ID;
 	var clientSecret = process.env.OAUTH_CLIENT_SECRET;
 	var username = process.env.OAUTH_USERNAME;
-	var password = process.env.OAUTH_PASSWORD;	
+	var password = process.env.OAUTH_PASSWORD;
 	
 	// create request and post
 	var postData = querystring.stringify({
@@ -41,6 +41,12 @@ function getAccessToken() {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}
 	}, function(error, response, body) {
+		// detect error
+		if (error) {
+			console.log("Unable to get access_token due to error: " + error);
+			return;
+		}
+
 		// get access token and store in context
 		var obj = JSON.parse(body);
 		var access_token = obj.access_token;
@@ -135,7 +141,7 @@ function chooseProductAndCreateSurvey() {
 				"Authorization": "Bearer " + context.access_token,
 				"Accept": "application/json"
 			},
-			"url": context.urls.sobjects + "survey__c",
+			"url": context.instance_url + context.urls.sobjects + "survey__c",
 			"json": survey
 		}, function(error, response, body) {
 			var obj = body;
