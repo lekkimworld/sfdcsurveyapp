@@ -42,7 +42,6 @@ function getAccessToken() {
 		}
 	}, function(error, response, body) {
 		// get access token and store in context
-		console.log(body);
 		var obj = JSON.parse(body);
 		var access_token = obj.access_token;
 		var instance_url = obj.instance_url;
