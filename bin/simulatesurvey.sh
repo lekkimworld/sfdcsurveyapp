@@ -3,6 +3,7 @@ var products = require("./products.js").products;
 var context = require("./context.js").context;
 var request = require('request');
 var async = require('async');
+var querystring = require('querystring');
 
 function getRandomInt(min, max) {
     var r = (Math.random() * (max - min)) + min;
@@ -14,6 +15,39 @@ function getRandomObject(arr) {
     var random = getRandomInt(min, max);
     var obj = arr[random];
     return obj;
+}
+
+function getAccessToken(callback) {
+	// get oauth data
+	var clientId = process.env.OAUTH_CLIENT_ID;
+	var clientSecret = process.env.OAUTH_CLIENT_SECRET;
+	var username = process.env.OAUTH_USERNAME;
+	var password = process.env.OAUTH_PASSWORD;	
+	
+	// create request and post
+	var postData = querystring.stringify({
+		"grant_type": "password", 
+		"client_id": clientId, 
+		"client_secret": clientSecret, 
+		"username": username, 
+		"password": password
+	});
+	var contentLength = postData.length;
+	request.post({
+		"url": context.urls.oauth_token, 
+		"body": postData,
+		"headers": {
+			'Content-Length': contentLength,
+			'Content-Type': 'application/x-www-form-urlencoded'
+		}
+	}, function(error, response, body) {
+		// get access token and store in context
+		var access_token = JSON.parse(body).access_token;
+		context.access_token = access_token;
+
+		// call callback
+		callback();
+	});
 }
 
 function createAnswersForSurvey(survey, survey_id, answers) {
@@ -113,5 +147,5 @@ function chooseProductAndCreateSurvey() {
 		});
 	});
 }
-chooseProductAndCreateSurvey();
+getAccessToken(chooseProductAndCreateSurvey);
 
