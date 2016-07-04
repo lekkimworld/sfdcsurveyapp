@@ -42,8 +42,11 @@ function getAccessToken(callback) {
 		}
 	}, function(error, response, body) {
 		// get access token and store in context
-		var access_token = JSON.parse(body).access_token;
+		var obj = JSON.parse(body);
+		var access_token = obj.access_token;
+		var instance_url = obj.instance_url;
 		context.access_token = access_token;
+		context.instance_url = instance_url;
 
 		// call callback
 		callback();
@@ -57,7 +60,7 @@ function createAnswersForSurvey(survey, survey_id, answers) {
 				"Authorization": "Bearer " + context.access_token,
 				"Accept": "application/json"
 			},
-			"url": context.urls.sobjects + "survey_answer__c",
+			"url": context.instance_url + context.urls.sobjects + "survey_answer__c",
 			"json": answer
 		}, function(error, response, body) {
 			callback(error);
@@ -79,7 +82,7 @@ function chooseProductAndCreateSurvey() {
 			"Authorization": "Bearer " + context.access_token,
 			"Accept": "application/json"
 		},
-		"url": context.urls.query,
+		"url": context.instance_url + context.urls.query,
 		"qs": {
 			"q": query
 		}
