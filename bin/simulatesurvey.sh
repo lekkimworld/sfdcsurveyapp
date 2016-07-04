@@ -17,7 +17,7 @@ function getRandomObject(arr) {
     return obj;
 }
 
-function getAccessToken(callback) {
+function getAccessToken() {
 	// get oauth data
 	var clientId = process.env.OAUTH_CLIENT_ID;
 	var clientSecret = process.env.OAUTH_CLIENT_SECRET;
@@ -42,14 +42,15 @@ function getAccessToken(callback) {
 		}
 	}, function(error, response, body) {
 		// get access token and store in context
+		console.log(body);
 		var obj = JSON.parse(body);
 		var access_token = obj.access_token;
 		var instance_url = obj.instance_url;
 		context.access_token = access_token;
 		context.instance_url = instance_url;
 
-		// call callback
-		callback();
+		// create survey
+		chooseProductAndCreateSurvey();
 	});
 }
 
@@ -150,5 +151,5 @@ function chooseProductAndCreateSurvey() {
 		});
 	});
 }
-getAccessToken(chooseProductAndCreateSurvey);
+getAccessToken();
 
