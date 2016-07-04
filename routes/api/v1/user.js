@@ -11,6 +11,9 @@ router.get('/', function(req, res, next) {
 		if (req.session.selectedProduct) {
 			obj.selectedProduct = req.session.selectedProduct;
 		}
+		if (req.session.selectedContacts) {
+			obj.selectedContactsCount = req.session.selectedContacts.length;
+		}
 		res.json(obj);
 	} else {
 		// no user object

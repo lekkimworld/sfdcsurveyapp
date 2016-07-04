@@ -168,7 +168,15 @@ app.controller('myCtrl', function($scope, $http, $window) {
     $scope.filterResults();
   }
 
-  
+  $scope.next = function() {
+  	// sanity
+    if (!$scope.filteredResults) return;
+
+    // user is clicking next - post contacts to API
+    $http.post("/api/v1/contactselect", $scope.filteredResults).then(function(response) {
+      $window.location.href = "/listsave";
+    });
+  }
 
   $scope.back = function() {
     $window.location.href = "/products";

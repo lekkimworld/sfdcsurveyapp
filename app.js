@@ -10,12 +10,14 @@ var routeIndex = require('./routes/index');
 var routeApp = require('./routes/app');
 var routeProducts = require('./routes/products');
 var routeContacts = require('./routes/contacts');
+var routeListsave = require('./routes/listsave');
 var routeLogout = require('./routes/logout');
 var routeOAuth20_cb = require('./routes/oauth20_cb');
 var routeApiV1User = require('./routes/api/v1/user');
 var routeApiV1Prodsearch = require('./routes/api/v1/productsearch');
 var routeApiV1Prodselect = require('./routes/api/v1/productselect');
 var routeApiV1Contactsearch = require('./routes/api/v1/contactsearch');
+var routeApiV1Contactselect = require('./routes/api/v1/contactselect');
 
 var app = express();
 
@@ -32,12 +34,14 @@ app.use('/', routeIndex);
 app.use('/app', routeApp);
 app.use('/products', routeProducts);
 app.use('/contacts', routeContacts);
+app.use('/listsave', routeListsave);
 app.use('/logout', routeLogout);
 app.use('/oauth20_cb', routeOAuth20_cb);
 app.use('/api/v1/user', routeApiV1User);
 app.use('/api/v1/productsearch', routeApiV1Prodsearch);
 app.use('/api/v1/productselect', routeApiV1Prodselect);
 app.use('/api/v1/contactsearch', routeApiV1Contactsearch);
+app.use('/api/v1/contactselect', routeApiV1Contactselect);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
