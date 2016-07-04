@@ -80,7 +80,7 @@ function chooseProductAndCreateSurvey() {
 		var survey = {
 		    "Name": "Product survey Q3-2016: " + op.Contact.FirstName + " " + op.Contact.LastName + " (" + (op.Contact.Account ? op.Contact.Account.Name : "no account") + ")",
 		    "Contact__c": op.ContactId,
-		    "Account__c": op.Contact.Account.Id,
+		    "Account__c": op.Contact.Account ? op.Contact.Account.Id : null,
 		    "Opportunity__c": op.OpportunityId,
 		    "Product__c": product.Id
 		};

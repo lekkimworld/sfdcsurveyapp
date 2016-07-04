@@ -57,36 +57,90 @@
     <div class="container">
       <!-- list existing surveys -->
       <h2 class="sub-header">Surveys</h2>
-        <p>Below are the surveys you've already created.</p>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <p>
+        <button class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button> Below are the surveys you've already created.
+        </p>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Created On</th>
+                <th>Created By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1001</td>
+                <td>Product Survey for 'Product Alpha' Q3-2016</td>
+                <td>Open for Edits</td>
+                <td>Mikkel Flindt Heisterberg</td>
+                <td>4 July 2016</td>
+              </tr>
+              <tr>
+                <td>1002</td>
+                <td>Product Survey for 'Product Delta' May 2016</td>
+                <td>Active</td>
+                <td>Mikkel Flindt Heisterberg</td>
+                <td>29 June 2016</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- list existing recipient lists -->
+      <h2 class="sub-header">Recipient Lists</h2>
+        <p>
+          <a href="/products" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a> Below are your recipient lists you may edit.
+        </p>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>No. of recipients</th>
+                <th>Product (code/name)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>3221</td>
+                <td>Q3 'Product Delta' recipients</td>
+                <td>121</td>
+                <td>D400 / Product Delta</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- list existing email templates -->
+      <h2 class="sub-header">Email Templates</h2>
+        <p>
+          <button class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button> Below are the e-mail templates available to you.
+        </p>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Subject</th>
+                <th>From</th>
+                <th>Body</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1001</td>
+                <td>Default Template</td>
+                <td>products@eaglesystems.com</td>
+                <td>Dear $$FirstName$$ $$LastName$$...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
       <hr>
 
